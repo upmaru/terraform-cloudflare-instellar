@@ -19,10 +19,10 @@ resource "cloudflare_record" "this" {
   type    = "CNAME"
   proxied = true
 }
-
+  
 resource "cloudflare_tunnel_config" "this" {
   account_id = var.cloudflare_account_id
-  tunnel_id  = cloudfalre_tunnel.this.id
+  tunnel_id  = cloudflare_tunnel.this.id
 
   config {
     ingress_rule {
@@ -57,7 +57,7 @@ resource "terraform_data" "cloudflared" {
     port         = var.bastion_access.port
     key          = var.bastion_access.private_key
     download_url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-${var.bastion_access.architecture}.deb"
-    tunnel_token = cloudflared_tunnel.this.tunnel_token
+    tunnel_token = cloudflare_tunnel.this.tunnel_token
   }
 
   connection {
