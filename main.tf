@@ -29,6 +29,10 @@ resource "cloudflare_tunnel_config" "this" {
       hostname = cloudflare_record.this.hostname
       service  = "ssh://localhost:22"
     }
+
+    ingress_rule {
+      service  = "http_status:404"
+    }
   }
 }
 
