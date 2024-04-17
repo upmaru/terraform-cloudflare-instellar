@@ -73,7 +73,7 @@ resource "terraform_data" "cloudflared" {
     inline = [
       "curl -L --output cloudflared.deb ${self.input.download_url}",
       "sudo dpkg -i cloudflared.deb",
-      "sudo cloudflared service install ${self.input.token}"
+      "sudo cloudflared service install ${self.input.tunnel_token}"
     ]
   }
 }
