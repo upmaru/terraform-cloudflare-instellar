@@ -49,3 +49,31 @@ resource "cloudflare_access_policy" "this" {
     email = var.emails
   }
 }
+
+resource "terraform_data" "cloudflared" {
+  input = {
+    user         = var.bastion_access.user
+    host         = var.bastion_access.host
+    port         = var.bastion_access.port
+    key          = var.bastion_access.private_key
+    download_url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-${var.bastion_access.architecture}.deb"
+    tunnel_token = cloudflared_tunnel.this.tunnel_token
+  }
+
+  connection {
+    type        = "ssh"
+    user        = self.input.user
+    host        = self.input.host
+    port        = self.input.port
+    private_key = self.input.key
+    timeout     = "10s"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl -L --output cloudflared.deb ${self.input.download_url}",
+      "sudo dpkg -i cloudflared.deb",
+      "sudo cloudflared service install ${self.input.token}"
+    ]
+  }
+}

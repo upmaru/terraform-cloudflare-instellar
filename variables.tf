@@ -23,3 +23,17 @@ variable "emails" {
   description = "Emails of users who can access the tunnel"
   type        = list(string)
 }
+
+variable "bastion_access" {
+  description = "Bastion access to provision cloudflare tunnel"
+
+  type = object({
+    user         = string
+    host         = string
+    private_key  = string
+    port         = number
+    architecture = string
+  })
+
+  sensitive = true
+}
