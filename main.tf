@@ -19,7 +19,7 @@ resource "cloudflare_record" "this" {
   type    = "CNAME"
   proxied = true
 }
-  
+
 resource "cloudflare_tunnel_config" "this" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_tunnel.this.id
@@ -31,7 +31,7 @@ resource "cloudflare_tunnel_config" "this" {
     }
 
     ingress_rule {
-      service  = "http_status:404"
+      service = "http_status:404"
     }
   }
 }
@@ -54,6 +54,11 @@ resource "cloudflare_access_policy" "this" {
   }
 }
 
+resource "cloudflare_access_ca_certificate" "this" {
+  zone_id        = data.cloudflare_zone.this.id
+  application_id = cloudflare_access_application.this.id
+}
+
 resource "terraform_data" "cloudflared" {
   input = {
     user         = var.bastion_access.user
@@ -71,6 +76,16 @@ resource "terraform_data" "cloudflared" {
     port        = self.input.port
     private_key = self.input.key
     timeout     = "10s"
+  }
+
+  provisioner "file" {
+    content     = cloudflare_access_ca_certificate.this.public_key
+    destination = "/etc/ssh/ca.pub"
+  }
+
+  provisioner "file" {
+    content     = templatefile("./sshd.conf.tpl", {})
+    destination = "/etc/ssh/sshd_config/cloudflare.conf"
   }
 
   provisioner "remote-exec" {
