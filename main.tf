@@ -84,7 +84,7 @@ resource "terraform_data" "cloudflared" {
   }
 
   provisioner "file" {
-    content     = templatefile("./sshd.conf.tpl", {})
+    content     = templatefile("${path.module}/sshd.conf.tpl", {})
     destination = "/etc/ssh/sshd_config/cloudflare.conf"
   }
 
