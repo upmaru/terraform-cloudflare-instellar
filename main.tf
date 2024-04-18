@@ -96,7 +96,8 @@ resource "terraform_data" "cloudflared" {
       "sudo mv cloudflare.conf /etc/ssh/sshd_config.d/cloudflare.conf",
       "curl -L --output cloudflared.deb ${self.input.download_url}",
       "sudo dpkg -i cloudflared.deb",
-      "sudo cloudflared service install ${self.input.tunnel_token}"
+      "sudo cloudflared service install ${self.input.tunnel_token}",
+      "sudo service ssh restart"
     ]
   }
 }
