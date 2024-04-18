@@ -60,6 +60,8 @@ resource "cloudflare_access_ca_certificate" "this" {
 }
 
 resource "terraform_data" "cloudflared" {
+  triggers_replace = var.bastion_access.host
+
   input = {
     user         = var.bastion_access.user
     host         = var.bastion_access.host
@@ -93,12 +95,6 @@ resource "terraform_data" "cloudflared" {
       "curl -L --output cloudflared.deb ${self.input.download_url}",
       "sudo dpkg -i cloudflared.deb",
       "sudo cloudflared service install ${self.input.tunnel_token}"
-    ]
-  }
-
-  lifecycle {
-    replace_triggered_by = [
-      var.bastion_access.host
     ]
   }
 }
