@@ -95,4 +95,10 @@ resource "terraform_data" "cloudflared" {
       "sudo cloudflared service install ${self.input.tunnel_token}"
     ]
   }
+
+  lifecycle {
+    replace_triggered_by = [
+      var.bastion_access.host
+    ]
+  }
 }
