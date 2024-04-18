@@ -3,7 +3,7 @@
 This module contains integrations with Cloudflare for Instellar.
 
 - [x] Setup zero-trust ssh tunnel access.
-- [] DNS credential module.
+- [ ] DNS credential module.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
