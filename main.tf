@@ -82,16 +82,18 @@ resource "terraform_data" "cloudflared" {
 
   provisioner "file" {
     content     = cloudflare_access_ca_certificate.this.public_key
-    destination = "/etc/ssh/ca.pub"
+    destination = "ca.pub"
   }
 
   provisioner "file" {
     content     = file("${path.module}/sshd.conf.tpl")
-    destination = "/etc/ssh/sshd_config/cloudflare.conf"
+    destination = "cloudflare.conf"
   }
 
   provisioner "remote-exec" {
     inline = [
+      "sudo mv ca.pub /etc/ssh/ca.pub",
+      "sudo mv cloudflare.conf /etc/ssh/sshd_config/cloudflare.conf",
       "curl -L --output cloudflared.deb ${self.input.download_url}",
       "sudo dpkg -i cloudflared.deb",
       "sudo cloudflared service install ${self.input.tunnel_token}"
