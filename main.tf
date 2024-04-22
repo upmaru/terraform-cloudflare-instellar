@@ -38,7 +38,7 @@ resource "cloudflare_tunnel_config" "this" {
 
 resource "cloudflare_access_application" "this" {
   zone_id          = data.cloudflare_zone.this.id
-  name             = "Access application ssh access for ${var.identifier}"
+  name             = "${var.identifier}.app"
   domain           = "${var.identifier}.${var.zone_name}"
   session_duration = "1h"
 }
@@ -46,7 +46,7 @@ resource "cloudflare_access_application" "this" {
 resource "cloudflare_access_policy" "this" {
   application_id = cloudflare_access_application.this.id
   zone_id        = data.cloudflare_zone.this.id
-  name           = "Access policy ssh access for ${var.identifier}"
+  name           = "${var.identifier}.access"
   precedence     = "1"
   decision       = "allow"
   include {
