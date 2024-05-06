@@ -38,7 +38,7 @@ resource "cloudflare_tunnel_config" "this" {
 
 resource "cloudflare_access_application" "this" {
   zone_id          = data.cloudflare_zone.this.id
-  name             = "${var.identifier}.app"
+  name             = "${var.identifier}.cluster"
   domain           = "${var.identifier}.${var.zone_name}"
   session_duration = "1h"
 }
